@@ -22,11 +22,12 @@ import { ethers } from "ethers";
 interface TransferFormProps {
   isOpen: boolean;
   onClose: () => void;
+  onTransferSuccess: () => void;
   address: string | null;
   balance: string | null;
 }
 
-const TransferModal = ({ isOpen, onClose, address, balance }: TransferFormProps) => {
+const TransferModal = ({ isOpen, onClose, onTransferSuccess, address, balance }: TransferFormProps) => {
   const toast = useToast();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
@@ -86,7 +87,7 @@ const TransferModal = ({ isOpen, onClose, address, balance }: TransferFormProps)
         duration: 3000,
         isClosable: true,
       });
-
+      onTransferSuccess();
       handleClose();
     } catch (error) {
       console.error("Failed to send transaction:", error);

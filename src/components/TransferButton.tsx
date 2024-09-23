@@ -5,9 +5,10 @@ import TransferModal from './TransferModal';
 interface TransferButtonProps {
   address: string | null;
   balance: string | null;
+  onTransferSuccess: () => void;
 }
 
-const TransferButton = ({ address, balance }: TransferButtonProps) => {
+const TransferButton = ({ address, balance, onTransferSuccess }: TransferButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -23,6 +24,7 @@ const TransferButton = ({ address, balance }: TransferButtonProps) => {
         onClose={closeModal}
         address={address}
         balance={balance}
+        onTransferSuccess={onTransferSuccess}
       />
     </>
   );
