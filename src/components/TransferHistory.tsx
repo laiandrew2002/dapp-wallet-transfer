@@ -16,6 +16,7 @@ import {
   Box,
   useClipboard,
   IconButton,
+  CircularProgress,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 
@@ -61,9 +62,11 @@ const AddressCopy = ({ address }: { address: string }) => {
 const TransactionHistory = ({ address }: TransactionHistoryProps) => {
   const toast = useToast();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTransactions = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch("/api/transactions");
         const data = await response.json();
@@ -77,6 +80,8 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
           duration: 3000,
           isClosable: true,
         });
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchTransactions();
@@ -92,7 +97,7 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
         </Heading>
       </CardHeader>
       <CardBody>
-        {!transactions.length ? (
+        {isLoading ? <CircularProgress isIndeterminate /> : !transactions.length ? (
           <Text>No transactions found.</Text>
         ) : (
           <Box overflowX="auto">

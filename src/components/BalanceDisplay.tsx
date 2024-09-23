@@ -45,7 +45,7 @@ const BalanceDisplay = ({ address }: BalanceDisplayProps) => {
           <Box mb={4}>
             {balance ? <p>{balance} ETH</p> : <CircularProgress isIndeterminate />}
           </Box>
-          <TransferButton address={address} />
+          <TransferButton address={address} balance={balance}/>
         </>}
       </CardBody>
     </Card>

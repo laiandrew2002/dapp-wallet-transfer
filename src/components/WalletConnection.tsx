@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { Button, useToast, Menu, MenuButton, MenuList, MenuItem, useClipboard } from "@chakra-ui/react";
+import { Button, useToast, Menu, MenuButton, MenuList, MenuItem, useClipboard, Box } from "@chakra-ui/react";
 import { ChevronDownIcon, CopyIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { Icon } from '@chakra-ui/react'
+import { IoWalletOutline } from "react-icons/io5";
 import { connectWallet } from "../utils/ethers";
 import truncateAddress from "../utils/truncateAddress";
 
@@ -77,7 +79,9 @@ const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
       {address ? (
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-            {truncateAddress(address)}
+          <Box display="flex" alignItems="center" gap={2}>
+            <Icon as={IoWalletOutline}/>{truncateAddress(address)}
+          </Box>
           </MenuButton>
           <MenuList>
             <MenuItem onClick={handleCopyAddress} icon={<CopyIcon />}>Copy Address</MenuItem>
