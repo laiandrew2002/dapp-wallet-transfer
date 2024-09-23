@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { getBalance } from "../utils/ethers";
+
 interface BalanceDisplayProps {
   address: string | null;
 }
-const BalanceDisplay: React.FC<BalanceDisplayProps> = ({ address }) => {
+
+const BalanceDisplay = ({ address }: BalanceDisplayProps) => {
   const [balance, setBalance] = useState<string | null>(null);
   useEffect(() => {
     const fetchBalance = async () => {
@@ -26,4 +28,5 @@ const BalanceDisplay: React.FC<BalanceDisplayProps> = ({ address }) => {
     </div>
   );
 };
+
 export default BalanceDisplay;

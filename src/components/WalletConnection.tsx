@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { connectWallet } from "../utils/ethers";
+
 interface WalletConnectionProps {
   address: string | null;
   setAddress: (address: string | null) => void;
 }
+
 const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
   const handleConnect = async () => {
     try {
@@ -42,4 +44,5 @@ const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
     </div>
   );
 };
+
 export default WalletConnection;
