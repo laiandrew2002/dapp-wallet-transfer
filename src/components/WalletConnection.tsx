@@ -1,9 +1,18 @@
 import React, { useEffect } from "react";
-import { Button, useToast, Menu, MenuButton, MenuList, MenuItem, useClipboard, Box } from "@chakra-ui/react";
+import {
+  Button,
+  useToast,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useClipboard,
+  Box,
+} from "@chakra-ui/react";
 import { ChevronDownIcon, CopyIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Icon } from '@chakra-ui/react'
 import { IoWalletOutline } from "react-icons/io5";
-import { connectWallet } from "../utils/ethers";
+import { connectWalletToSepolia, getProvider, switchToSepolia } from "../utils/ethers";
 import truncateAddress from "../utils/truncateAddress";
 
 interface WalletConnectionProps {
@@ -17,7 +26,7 @@ const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
   
   const handleConnect = async () => {
     try {
-      const addr = await connectWallet();
+      const addr = await connectWalletToSepolia();
       setAddress(addr);
       toast({
         title: "Wallet Connected",
@@ -61,18 +70,33 @@ const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
   };
 
   useEffect(() => {
-    const checkConnection = async () => {
+    const checkWalletConnection = async () => {
       if (typeof window.ethereum !== "undefined" && window.ethereum.request) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
-        });
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
         if (accounts.length > 0) {
-          setAddress(accounts[0]);
+          try {
+            const provider = getProvider();
+            const network = await provider!.getNetwork();
+            if (network.chainId !== 11155111) {
+              await switchToSepolia();
+            }
+            setAddress(accounts[0]);
+          } catch (error) {
+            console.error("Error connecting to Sepolia network:", error);
+            toast({
+              title: "Connection Failed",
+              description: "Failed to connect to Sepolia network. Please try again.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
         }
       }
     };
-    checkConnection();
-  }, [setAddress]);
+
+    checkWalletConnection();
+  }, [setAddress, toast]);
 
   return (
     <div>
