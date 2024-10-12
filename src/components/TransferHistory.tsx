@@ -21,7 +21,7 @@ import {
 import React, { useState, useEffect } from "react";
 
 interface Transaction {
-  id: number;
+  txHash: string;
   from: string;
   to: string;
   amount: string;
@@ -68,7 +68,7 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
     const fetchTransactions = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("/api/transactions");
+        const response = await fetch(`/api/transactions?address=${address}`);
         const data = await response.json();
         setTransactions(data);
       } catch (error) {
@@ -84,8 +84,8 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
         setIsLoading(false);
       }
     };
-    fetchTransactions();
-  }, [toast]);
+    if (address) fetchTransactions();
+  }, [toast, address]);
 
   if (!address) return null;
 
@@ -104,6 +104,7 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
             <Table variant="simple" minW="600px">
               <Thead>
                 <Tr>
+                  <Th>Tx Hash</Th>
                   <Th>From</Th>
                   <Th>To</Th>
                   <Th>Amount (ETH)</Th>
@@ -112,7 +113,8 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
               </Thead>
               <Tbody>
                 {transactions.map((tx) => (
-                  <Tr key={tx.id}>
+                  <Tr key={tx.txHash}>
+                    <Td><AddressCopy address={tx.txHash} /></Td>
                     <Td><AddressCopy address={tx.from} /></Td>
                     <Td><AddressCopy address={tx.to} /></Td>
                     <Td>{tx.amount}</Td>
