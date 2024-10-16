@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Alchemy, AssetTransfersCategory, AssetTransfersWithMetadataResult, Network } from 'alchemy-sdk';
+import { handleErrorResponse, handleSuccessResponse } from '@/lib/utils/apiHandler';
 
 const settings = {
   apiKey: process.env.ALCHEMY_API_KEY,
@@ -42,24 +43,17 @@ const formatTransaction = (transaction: AssetTransfersWithMetadataResult) => {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    const allTransactions = await fetchTransactions(req.query.address as string);
+  const { address } = req.query;
 
-    res.status(200).json(allTransactions);
-  } else if (req.method === 'POST') {
-    // not use
-    // const { from, to, amount } = req.body;
-    // const newTransaction = {
-    //   id: transactions.length + 1,
-    //   from,
-    //   to,
-    //   amount,
-    //   timestamp: Date.now(),
-    // };
-    // transactions.push(newTransaction);
-    res.status(201).json([]);
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  if (!address || typeof address !== 'string') {
+    return handleErrorResponse(res, 400, "Transaction ID is required and must be a string");
+  }
+
+  try {
+    const transaction = await fetchTransactions(address);
+    return handleSuccessResponse(res, 200, transaction);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+  } catch (error: any) {
+    return handleErrorResponse(res, 500, "Failed to fetch transaction");
   }
 }

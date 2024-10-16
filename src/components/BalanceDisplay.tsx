@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getBalance } from "../utils/ethers";
+import { getBalance } from "../lib/utils/ethers";
 import { Card, CardBody, CardHeader, CircularProgress, Heading, useToast, Text, Box } from "@chakra-ui/react";
 import TransferButton from "./TransferButton";
 

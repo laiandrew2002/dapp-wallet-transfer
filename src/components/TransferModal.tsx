@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import { sendTransaction } from "../utils/ethers";
+import { sendTransaction } from "../lib/utils/ethers";
 import {
   Button,
   FormControl,

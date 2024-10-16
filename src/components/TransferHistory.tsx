@@ -1,4 +1,4 @@
-import truncateAddress from "@/utils/truncateAddress";
+import truncateAddress from "@/lib/utils/truncateAddress";
 import { CopyIcon } from "@chakra-ui/icons";
 import {
   Card,
@@ -69,7 +69,7 @@ const TransactionHistory = ({ address }: TransactionHistoryProps) => {
       setIsLoading(true);
       try {
         const response = await fetch(`/api/transactions?address=${address}`);
-        const data = await response.json();
+        const { data } = await response.json();
         setTransactions(data);
       } catch (error) {
         console.error("Failed to fetch transactions:", error);

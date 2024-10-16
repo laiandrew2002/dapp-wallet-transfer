@@ -12,8 +12,8 @@ import {
 import { ChevronDownIcon, CopyIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Icon } from '@chakra-ui/react'
 import { IoWalletOutline } from "react-icons/io5";
-import { connectWalletToSepolia, getProvider, switchToSepolia } from "../utils/ethers";
-import truncateAddress from "../utils/truncateAddress";
+import { connectWalletToSepolia, getProvider, switchToSepolia } from "../lib/utils/ethers";
+import truncateAddress from "../lib/utils/truncateAddress";
 
 interface WalletConnectionProps {
   address: string | null;
