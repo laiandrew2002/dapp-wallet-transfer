@@ -41,7 +41,7 @@ const BalanceDisplay = ({ address }: BalanceDisplayProps) => {
     <Card mx="auto" mt={6} mb={6} p={6} shadow="md" borderRadius="lg" bg="gray.50" minW={{ lg: "600px" }}>
       <CardHeader>
         <Heading as="h1" size="md">
-          Welcome to Scroll Wallet Transfer
+          Welcome to Wallet Transfer
         </Heading>
       </CardHeader>
       <CardBody>

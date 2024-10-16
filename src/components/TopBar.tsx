@@ -17,7 +17,7 @@ const TopBar = ({ children }: { children: React.ReactNode }) => {
               fontWeight="bold"
               display={{ base: "none", sm: "block" }}
             >
-              Scroll Wallet Transfer
+              Wallet Transfer
             </Text>
         </Box>
         {children}

@@ -7,8 +7,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Scroll Wallet Transfer</title>
-        <meta name="description" content="Transfer ETH using your Scroll Wallet" />
+        <title>Wallet Transfer</title>
+        <meta name="description" content="Transfer ETH using Wallet Transfer" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
