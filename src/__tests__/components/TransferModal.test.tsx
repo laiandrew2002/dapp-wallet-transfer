@@ -47,7 +47,7 @@ describe('TransferModal', () => {
     jest.clearAllMocks()
     // Reset mocked functions to their default behavior
     ;(ethers.utils.isAddress as jest.Mock).mockReturnValue(true)
-    ;(ethers.utils.parseEther as jest.Mock).mockImplementation((value) => ({
+    ;(ethers.utils.parseEther as jest.Mock).mockImplementation(() => ({
       lte: jest.fn().mockReturnValue(false),
       gt: jest.fn().mockReturnValue(false)
     }))
@@ -85,7 +85,7 @@ describe('TransferModal', () => {
     })
 
     it('validates amount greater than balance', async () => {
-      ;(ethers.utils.parseEther as jest.Mock).mockImplementation((value) => ({
+      ;(ethers.utils.parseEther as jest.Mock).mockImplementation(() => ({
         lte: jest.fn().mockReturnValue(false),
         gt: jest.fn().mockReturnValue(true)
       }))
@@ -101,7 +101,7 @@ describe('TransferModal', () => {
     })
 
     it('validates amount less than or equal to zero', async () => {
-      ;(ethers.utils.parseEther as jest.Mock).mockImplementation((value) => ({
+      ;(ethers.utils.parseEther as jest.Mock).mockImplementation(() => ({
         lte: jest.fn().mockReturnValue(true),
         gt: jest.fn().mockReturnValue(false)
       }))
