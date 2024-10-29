@@ -23,7 +23,7 @@ interface WalletConnectionProps {
 const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
   const toast = useToast();
   const { onCopy } = useClipboard(address || "");
-  
+
   const handleConnect = async () => {
     try {
       const addr = await connectWalletToSepolia();
@@ -104,16 +104,16 @@ const WalletConnection = ({ address, setAddress }: WalletConnectionProps) => {
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
           <Box display="flex" alignItems="center" gap={2}>
-            <Icon as={IoWalletOutline}/>{truncateAddress(address)}
+            <Icon data-testid='wallet-address-menu' as={IoWalletOutline}/>{truncateAddress(address)}
           </Box>
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={handleCopyAddress} icon={<CopyIcon />}>Copy Address</MenuItem>
-            <MenuItem onClick={handleDisconnect} icon={<SmallCloseIcon />}>Disconnect</MenuItem>
+            <MenuItem data-testid='copy-address' onClick={handleCopyAddress} icon={<CopyIcon />}>Copy Address</MenuItem>
+            <MenuItem data-testid='disconnect' onClick={handleDisconnect} icon={<SmallCloseIcon />}>Disconnect</MenuItem>
           </MenuList>
         </Menu>
       ) : (
-        <Button colorScheme="blue" onClick={handleConnect}>
+        <Button data-testid='connect-wallet' colorScheme="blue" onClick={handleConnect}>
           Connect Wallet
         </Button>
       )}
