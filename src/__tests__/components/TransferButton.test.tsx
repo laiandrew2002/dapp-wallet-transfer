@@ -1,7 +1,8 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, act, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import TransferButton from '../../components/TransferButton'
+import userEvent from '@testing-library/user-event'
 
 // Mock the TransferModal component
 jest.mock('../../components/TransferModal', () => {
@@ -50,7 +51,7 @@ describe('TransferButton', () => {
     expect(button).toHaveAttribute('type', 'button')
   })
 
-  it('opens modal when button is clicked', () => {
+  it('opens modal when button is clicked', async() => {
     render(
       <TransferButton
         address={mockAddress}
@@ -63,11 +64,15 @@ describe('TransferButton', () => {
     expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
     
     // Click button and check if modal appears
-    fireEvent.click(screen.getByText('Send ETH'))
-    expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    })
   })
 
-  it('closes modal when onClose is triggered', () => {
+  it('closes modal when onClose is triggered', async () => {
     render(
       <TransferButton
         address={mockAddress}
@@ -77,15 +82,23 @@ describe('TransferButton', () => {
     )
     
     // Open modal
-    fireEvent.click(screen.getByText('Send ETH'))
-    expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    })
     
     // Close modal
-    fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Close'))
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    })
   })
 
-  it('passes correct props to TransferModal', () => {
+  it('passes correct props to TransferModal', async () => {
     render(
       <TransferButton
         address={mockAddress}
@@ -95,14 +108,16 @@ describe('TransferButton', () => {
     )
     
     // Open modal
-    fireEvent.click(screen.getByText('Send ETH'))
-    
-    // Check if props are passed correctly
-    expect(screen.getByText(`Address: ${mockAddress}`)).toBeInTheDocument()
-    expect(screen.getByText(`Balance: ${mockBalance}`)).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByText(`Address: ${mockAddress}`)).toBeInTheDocument()
+      expect(screen.getByText(`Balance: ${mockBalance}`)).toBeInTheDocument()
+    })
   })
 
-  it('triggers onTransferSuccess callback', () => {
+  it('triggers onTransferSuccess callback', async () => {
     render(
       <TransferButton
         address={mockAddress}
@@ -112,14 +127,23 @@ describe('TransferButton', () => {
     )
     
     // Open modal
-    fireEvent.click(screen.getByText('Send ETH'))
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    })
     
     // Trigger success
-    fireEvent.click(screen.getByText('Success'))
-    expect(mockOnTransferSuccess).toHaveBeenCalledTimes(1)
+    await act(async () => {
+      userEvent.click(screen.getByRole('button', { name: /Success/i }))
+    });
+    await waitFor(() => {
+      expect(mockOnTransferSuccess).toHaveBeenCalledTimes(1)
+    })
   })
 
-  it('maintains modal state correctly through multiple opens and closes', () => {
+  it('maintains modal state correctly through multiple opens and closes', async () => {
     render(
       <TransferButton
         address={mockAddress}
@@ -129,15 +153,31 @@ describe('TransferButton', () => {
     )
     
     // First cycle
-    fireEvent.click(screen.getByText('Send ETH'))
-    expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
-    fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    })
+    await act(async () => {
+      userEvent.click(screen.getByText('Close'))
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    })
     
     // Second cycle
-    fireEvent.click(screen.getByText('Send ETH'))
-    expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
-    fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('Send ETH'))
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-modal')).toBeInTheDocument()
+    })
+    await act(async () => {
+      userEvent.click(screen.getByText('Close'))
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId('mock-modal')).not.toBeInTheDocument()
+    })
   })
 })

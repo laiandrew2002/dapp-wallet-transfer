@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import TransferModal from '../../components/TransferModal'
@@ -79,9 +79,12 @@ describe('TransferModal', () => {
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0xinvalid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '0.1')
       
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
-      
-      expect(await screen.findByText('Invalid Ethereum address.')).toBeInTheDocument()
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
+      await waitFor(async () => {
+        expect(await screen.findByText('Invalid Ethereum address.')).toBeInTheDocument()
+      })
     })
 
     it('validates amount greater than balance', async () => {
@@ -95,9 +98,12 @@ describe('TransferModal', () => {
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0x123valid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '2.0')
       
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
-      
-      expect(await screen.findByText('Insufficient balance.')).toBeInTheDocument()
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
+      await waitFor(async () => {
+        expect(await screen.findByText('Insufficient balance.')).toBeInTheDocument()
+      })
     })
 
     it('validates amount less than or equal to zero', async () => {
@@ -111,9 +117,12 @@ describe('TransferModal', () => {
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0x123valid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '0')
       
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
-      
-      expect(await screen.findByText('Amount must be greater than 0.')).toBeInTheDocument()
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
+      await waitFor(async () => {
+        expect(await screen.findByText('Amount must be greater than 0.')).toBeInTheDocument()
+      })
     })
   })
 
@@ -124,7 +133,9 @@ describe('TransferModal', () => {
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0x123valid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '0.1')
       
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
       
       await waitFor(() => {
         expect(sendTransaction).toHaveBeenCalledWith('0x123valid', '0.1')
@@ -146,7 +157,9 @@ describe('TransferModal', () => {
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0x123valid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '0.1')
       
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
       
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(expect.objectContaining({
@@ -167,26 +180,33 @@ describe('TransferModal', () => {
       
       await userEvent.type(recipientInput, '0x123valid')
       await userEvent.type(amountInput, '0.1')
-      
-      fireEvent.click(screen.getByRole('button', { name: /Cancel/i }))
-      
-      expect(recipientInput).toHaveValue('')
-      expect(defaultProps.onClose).toHaveBeenCalled()
+
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Cancel/i }))
+      });
+
+      await waitFor(() => {
+        expect(recipientInput).toHaveValue('')
+        expect(defaultProps.onClose).toHaveBeenCalled()
+      })
     })
 
     it('shows loading state during transaction', async () => {
-      const mockTransaction = new Promise(resolve => setTimeout(resolve, 100))
-      ;(sendTransaction as jest.Mock).mockReturnValue({ wait: () => mockTransaction })
+      const mockTransaction = new Promise(resolve => setTimeout(resolve, 100));
+      (sendTransaction as jest.Mock).mockReturnValue({ wait: () => mockTransaction })
       
       render(<TransferModal {...defaultProps} />)
       
       await userEvent.type(screen.getByLabelText(/Recipient Address:/), '0x123valid')
       await userEvent.type(screen.getByLabelText(/Amount \(ETH\):/), '0.1')
-      
-      fireEvent.submit(screen.getByRole('button', { name: /Send/i }))
-      
-      expect(screen.getByRole('button', { name: /Send/i })).toHaveAttribute('disabled')
-      expect(screen.getByRole('button', { name: /Send/i })).toHaveAttribute('data-loading')
+
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /Send/i }))
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Send/i })).toHaveAttribute('disabled')
+        expect(screen.getByRole('button', { name: /Send/i })).toHaveAttribute('data-loading')
+      })
     })
   })
 })
