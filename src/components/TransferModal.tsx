@@ -131,6 +131,7 @@ const TransferModal = ({ isOpen, onClose, onTransferSuccess, address, balance }:
                 <Input
                   placeholder="0x..."
                   id="recipient"
+                  data-testid="recipient"
                   type="text"
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
@@ -141,6 +142,7 @@ const TransferModal = ({ isOpen, onClose, onTransferSuccess, address, balance }:
                 <FormLabel htmlFor="amount">Amount (ETH):</FormLabel>
                 <Input
                   id="amount"
+                  data-testid="amount"
                   placeholder="0.0"
                   type="number"
                   step="0.000000000000000001"

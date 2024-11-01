@@ -16,6 +16,7 @@ const TopBar = ({ children }: { children: React.ReactNode }) => {
               fontSize="xl"
               fontWeight="bold"
               display={{ base: "none", sm: "block" }}
+              data-testid='header-test'
             >
               Wallet Transfer
             </Text>
